@@ -1,6 +1,7 @@
 package com.zxb.disruptor.quickstart;
 
 import com.lmax.disruptor.EventHandler;
+import com.lmax.disruptor.WorkHandler;
 
 /**
  * 监听事件类，处理数据
@@ -8,10 +9,18 @@ import com.lmax.disruptor.EventHandler;
  * @author Mr.zxb
  * @date 2019-11-26 22:39
  */
-public class OrderEventHandler implements EventHandler<OrderEvent> {
+public class OrderEventHandler implements EventHandler<OrderEvent>, WorkHandler<OrderEvent> {
 
     @Override
     public void onEvent(OrderEvent orderEvent, long sequence, boolean endOfBatch) throws Exception {
-        System.out.println("消费者: " + orderEvent.getValue());
+//        System.out.println("消费者: " + orderEvent.getValue());
+
+        // 也可以用以下方式
+        this.onEvent(orderEvent);
+    }
+
+    @Override
+    public void onEvent(OrderEvent event) throws Exception {
+        System.out.println("消费者: " + event.getValue());
     }
 }
