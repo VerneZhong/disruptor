@@ -81,3 +81,12 @@
    * 依赖WorkerPool实现多消费者：
     ```workerPool(final RingBuffer<T> ringBuffer, SequenceBarrie sequenceBarrier, ExceptionHandler<? super T> exceptionHandler, WorkHandler<? super T>... workHandlers)```
     
+  ## 第三章 Disruptor底层源码分析
+   ### Disruptor底层性能为何如此高
+   * 数据结构层面：使用环形结构、数组、内存预加载
+   * 使用单线程写方式、内存屏障
+   * 消除伪共享（填充缓存行）
+   * 序号栅栏和序号配合使用来消除锁和CAS
+   
+   ### 高性能之道-数据结构-内存预加载机制
+   * RingBuffer使用数组Object[] entries作为存储元素
