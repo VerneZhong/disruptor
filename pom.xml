@@ -11,6 +11,9 @@
     <modules>
         <module>disruptor-api</module>
         <module>disruptor-source</module>
+        <module>disruptor-netty-server</module>
+        <module>disruptor-netty-client</module>
+        <module>disruptor-netty-common</module>
     </modules>
 
     <parent>
@@ -27,13 +30,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.10</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper -->
-        <dependency>
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>3.5.6</version>
         </dependency>
 
     </dependencies>

@@ -7,6 +7,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="disruptor-api" />
+        <module name="disruptor-netty-client" />
+        <module name="disruptor-netty-server" />
+        <module name="disruptor-netty-common" />
         <module name="disruptor-source" />
       </profile>
     </annotationProcessing>
@@ -14,6 +17,9 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="disruptor-api" options="-parameters" />
+      <module name="disruptor-netty-client" options="-parameters" />
+      <module name="disruptor-netty-common" options="-parameters" />
+      <module name="disruptor-netty-server" options="-parameters" />
       <module name="disruptor-source" options="-parameters" />
     </option>
   </component>

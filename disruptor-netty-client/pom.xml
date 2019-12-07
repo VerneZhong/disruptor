@@ -9,7 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>disruptor-api</artifactId>
+    <groupId>com.zxb</groupId>
+    <artifactId>disruptor-netty-client</artifactId>
 
     <dependencies>
         <dependency>
@@ -17,23 +18,10 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.lmax</groupId>-->
-<!--            <artifactId>disruptor</artifactId>-->
-<!--            <version>3.4.2</version>-->
-<!--        </dependency>-->
-
         <dependency>
-            <groupId>com.lmax.disruptor</groupId>
-            <artifactId>disruptor-source</artifactId>
+            <groupId>com.zxb</groupId>
+            <artifactId>disruptor-netty-common</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper -->
-        <dependency>
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>3.5.6</version>
         </dependency>
     </dependencies>
 </project>
