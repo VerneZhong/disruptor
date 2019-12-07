@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 public class Main {
 
     public static void main(String[] args) {
-        int ringBufferSize = 1024 * 1024;
+        int ringBufferSize = 4;
 
         /**
          * 1 EventFactory：消息（event）工厂对象
@@ -49,7 +49,7 @@ public class Main {
         // 填充数据
         ByteBuffer byteBuffer = ByteBuffer.allocate(8);
 
-        for (long i = 0; i < 100; i++) {
+        for (long i = 0; i < 5; i++) {
             byteBuffer.putLong(0, i);
             producer.sendData(byteBuffer);
         }

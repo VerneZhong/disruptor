@@ -28,8 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @param <T> event implementation storing the data for sharing during exchange or parallel coordination of an event.
  */
 public final class BatchEventProcessor<T>
-    implements EventProcessor
-{
+        implements EventProcessor {
     private static final int IDLE = 0;
     private static final int HALTED = IDLE + 1;
     private static final int RUNNING = HALTED + 1;
@@ -52,41 +51,36 @@ public final class BatchEventProcessor<T>
      * @param eventHandler    is the delegate to which events are dispatched.
      */
     public BatchEventProcessor(
-        final DataProvider<T> dataProvider,
-        final SequenceBarrier sequenceBarrier,
-        final EventHandler<? super T> eventHandler)
-    {
+            final DataProvider<T> dataProvider,
+            final SequenceBarrier sequenceBarrier,
+            final EventHandler<? super T> eventHandler) {
         this.dataProvider = dataProvider;
         this.sequenceBarrier = sequenceBarrier;
         this.eventHandler = eventHandler;
 
-        if (eventHandler instanceof SequenceReportingEventHandler)
-        {
+        if (eventHandler instanceof SequenceReportingEventHandler) {
             ((SequenceReportingEventHandler<?>) eventHandler).setSequenceCallback(sequence);
         }
 
         batchStartAware =
-            (eventHandler instanceof BatchStartAware) ? (BatchStartAware) eventHandler : null;
+                (eventHandler instanceof BatchStartAware) ? (BatchStartAware) eventHandler : null;
         timeoutHandler =
-            (eventHandler instanceof TimeoutHandler) ? (TimeoutHandler) eventHandler : null;
+                (eventHandler instanceof TimeoutHandler) ? (TimeoutHandler) eventHandler : null;
     }
 
     @Override
-    public Sequence getSequence()
-    {
+    public Sequence getSequence() {
         return sequence;
     }
 
     @Override
-    public void halt()
-    {
+    public void halt() {
         running.set(HALTED);
         sequenceBarrier.alert();
     }
 
     @Override
-    public boolean isRunning()
-    {
+    public boolean isRunning() {
         return running.get() != IDLE;
     }
 
@@ -95,10 +89,8 @@ public final class BatchEventProcessor<T>
      *
      * @param exceptionHandler to replace the existing exceptionHandler.
      */
-    public void setExceptionHandler(final ExceptionHandler<? super T> exceptionHandler)
-    {
-        if (null == exceptionHandler)
-        {
+    public void setExceptionHandler(final ExceptionHandler<? super T> exceptionHandler) {
+        if (null == exceptionHandler) {
             throw new NullPointerException();
         }
 
@@ -111,79 +103,56 @@ public final class BatchEventProcessor<T>
      * @throws IllegalStateException if this object instance is already running in a thread
      */
     @Override
-    public void run()
-    {
-        if (running.compareAndSet(IDLE, RUNNING))
-        {
+    public void run() {
+        if (running.compareAndSet(IDLE, RUNNING)) {
             sequenceBarrier.clearAlert();
 
             notifyStart();
-            try
-            {
-                if (running.get() == RUNNING)
-                {
+            try {
+                if (running.get() == RUNNING) {
                     processEvents();
                 }
-            }
-            finally
-            {
+            } finally {
                 notifyShutdown();
                 running.set(IDLE);
             }
-        }
-        else
-        {
+        } else {
             // This is a little bit of guess work.  The running state could of changed to HALTED by
             // this point.  However, Java does not have compareAndExchange which is the only way
             // to get it exactly correct.
-            if (running.get() == RUNNING)
-            {
+            if (running.get() == RUNNING) {
                 throw new IllegalStateException("Thread is already running");
-            }
-            else
-            {
+            } else {
                 earlyExit();
             }
         }
     }
 
-    private void processEvents()
-    {
+    private void processEvents() {
         T event = null;
         long nextSequence = sequence.get() + 1L;
 
-        while (true)
-        {
-            try
-            {
+        while (true) {
+            try {
                 final long availableSequence = sequenceBarrier.waitFor(nextSequence);
-                if (batchStartAware != null && availableSequence >= nextSequence)
-                {
+                if (batchStartAware != null && availableSequence >= nextSequence) {
                     batchStartAware.onBatchStart(availableSequence - nextSequence + 1);
                 }
 
-                while (nextSequence <= availableSequence)
-                {
+                while (nextSequence <= availableSequence) {
                     event = dataProvider.get(nextSequence);
                     eventHandler.onEvent(event, nextSequence, nextSequence == availableSequence);
                     nextSequence++;
                 }
 
                 sequence.set(availableSequence);
-            }
-            catch (final TimeoutException e)
-            {
+            } catch (final TimeoutException e) {
                 notifyTimeout(sequence.get());
-            }
-            catch (final AlertException ex)
-            {
-                if (running.get() != RUNNING)
-                {
+            } catch (final AlertException ex) {
+                if (running.get() != RUNNING) {
                     break;
                 }
-            }
-            catch (final Throwable ex)
-            {
+            } catch (final Throwable ex) {
                 exceptionHandler.handleEventException(ex, nextSequence, event);
                 sequence.set(nextSequence);
                 nextSequence++;
@@ -191,23 +160,17 @@ public final class BatchEventProcessor<T>
         }
     }
 
-    private void earlyExit()
-    {
+    private void earlyExit() {
         notifyStart();
         notifyShutdown();
     }
 
-    private void notifyTimeout(final long availableSequence)
-    {
-        try
-        {
-            if (timeoutHandler != null)
-            {
+    private void notifyTimeout(final long availableSequence) {
+        try {
+            if (timeoutHandler != null) {
                 timeoutHandler.onTimeout(availableSequence);
             }
-        }
-        catch (Throwable e)
-        {
+        } catch (Throwable e) {
             exceptionHandler.handleEventException(e, availableSequence, null);
         }
     }
@@ -215,16 +178,11 @@ public final class BatchEventProcessor<T>
     /**
      * Notifies the EventHandler when this processor is starting up
      */
-    private void notifyStart()
-    {
-        if (eventHandler instanceof LifecycleAware)
-        {
-            try
-            {
+    private void notifyStart() {
+        if (eventHandler instanceof LifecycleAware) {
+            try {
                 ((LifecycleAware) eventHandler).onStart();
-            }
-            catch (final Throwable ex)
-            {
+            } catch (final Throwable ex) {
                 exceptionHandler.handleOnStartException(ex);
             }
         }
@@ -233,16 +191,11 @@ public final class BatchEventProcessor<T>
     /**
      * Notifies the EventHandler immediately prior to this processor shutting down
      */
-    private void notifyShutdown()
-    {
-        if (eventHandler instanceof LifecycleAware)
-        {
-            try
-            {
+    private void notifyShutdown() {
+        if (eventHandler instanceof LifecycleAware) {
+            try {
                 ((LifecycleAware) eventHandler).onShutdown();
-            }
-            catch (final Throwable ex)
-            {
+            } catch (final Throwable ex) {
                 exceptionHandler.handleOnShutdownException(ex);
             }
         }

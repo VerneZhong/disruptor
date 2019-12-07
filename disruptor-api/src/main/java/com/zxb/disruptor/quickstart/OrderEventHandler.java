@@ -2,6 +2,9 @@ package com.zxb.disruptor.quickstart;
 
 import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.WorkHandler;
+import com.zxb.disruptor.common.SleepUtil;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * 监听事件类，处理数据
@@ -21,6 +24,7 @@ public class OrderEventHandler implements EventHandler<OrderEvent>, WorkHandler<
 
     @Override
     public void onEvent(OrderEvent event) throws Exception {
+//        SleepUtil.sleep(1, TimeUnit.HOURS);
         System.out.println("消费者: " + event.getValue());
     }
 }

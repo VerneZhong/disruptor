@@ -18,8 +18,7 @@ package com.lmax.disruptor.dsl;
 /**
  * Defines producer types to support creation of RingBuffer with correct sequencer and publisher.
  */
-public enum ProducerType
-{
+public enum ProducerType {
     /**
      * Create a RingBuffer with a single event publisher to the RingBuffer
      * 使用RingBuffer的单个事件发布者创建RingBuffer

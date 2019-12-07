@@ -1,6 +1,5 @@
 package com.lmax.disruptor;
 
-public interface BatchStartAware
-{
+public interface BatchStartAware {
     void onBatchStart(long batchSize);
 }

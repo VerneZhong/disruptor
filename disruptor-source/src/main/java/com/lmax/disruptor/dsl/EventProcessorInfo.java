@@ -25,62 +25,54 @@ import java.util.concurrent.Executor;
 /**
  * <p>Wrapper class to tie together a particular event processing stage</p>
  * <p>
- * <p>Tracks the event processor instance, the event handler instance, and sequence barrier which the stage is attached to.</p>
+ * <p>Tracks the event processor instance, the event handler instance, and sequence barrier which the stage is
+ * attached to.</p>
  *
  * @param <T> the type of the configured {@link EventHandler}
  */
-class EventProcessorInfo<T> implements ConsumerInfo
-{
+class EventProcessorInfo<T> implements ConsumerInfo {
     private final EventProcessor eventprocessor;
     private final EventHandler<? super T> handler;
     private final SequenceBarrier barrier;
     private boolean endOfChain = true;
 
     EventProcessorInfo(
-            final EventProcessor eventprocessor, final EventHandler<? super T> handler, final SequenceBarrier barrier)
-    {
+            final EventProcessor eventprocessor, final EventHandler<? super T> handler, final SequenceBarrier barrier) {
         this.eventprocessor = eventprocessor;
         this.handler = handler;
         this.barrier = barrier;
     }
 
-    public EventProcessor getEventProcessor()
-    {
+    public EventProcessor getEventProcessor() {
         return eventprocessor;
     }
 
     @Override
-    public Sequence[] getSequences()
-    {
+    public Sequence[] getSequences() {
         return new Sequence[]{eventprocessor.getSequence()};
     }
 
-    public EventHandler<? super T> getHandler()
-    {
+    public EventHandler<? super T> getHandler() {
         return handler;
     }
 
     @Override
-    public SequenceBarrier getBarrier()
-    {
+    public SequenceBarrier getBarrier() {
         return barrier;
     }
 
     @Override
-    public boolean isEndOfChain()
-    {
+    public boolean isEndOfChain() {
         return endOfChain;
     }
 
     @Override
-    public void start(final Executor executor)
-    {
+    public void start(final Executor executor) {
         executor.execute(eventprocessor);
     }
 
     @Override
-    public void halt()
-    {
+    public void halt() {
         eventprocessor.halt();
     }
 
@@ -88,14 +80,12 @@ class EventProcessorInfo<T> implements ConsumerInfo
      *
      */
     @Override
-    public void markAsUsedInBarrier()
-    {
+    public void markAsUsedInBarrier() {
         endOfChain = false;
     }
 
     @Override
-    public boolean isRunning()
-    {
+    public boolean isRunning() {
         return eventprocessor.isRunning();
     }
 }

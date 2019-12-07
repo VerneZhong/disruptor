@@ -27,28 +27,22 @@ import static java.lang.invoke.MethodType.methodType;
  * {@link Thread} class in some Java SE versions, but missing in prior
  * versions.
  */
-public final class ThreadHints
-{
+public final class ThreadHints {
     private static final MethodHandle ON_SPIN_WAIT_METHOD_HANDLE;
 
-    static
-    {
+    static {
         final MethodHandles.Lookup lookup = MethodHandles.lookup();
 
         MethodHandle methodHandle = null;
-        try
-        {
+        try {
             methodHandle = lookup.findStatic(Thread.class, "onSpinWait", methodType(void.class));
-        }
-        catch (final Exception ignore)
-        {
+        } catch (final Exception ignore) {
         }
 
         ON_SPIN_WAIT_METHOD_HANDLE = methodHandle;
     }
 
-    private ThreadHints()
-    {
+    private ThreadHints() {
     }
 
     /**
@@ -58,18 +52,13 @@ public final class ThreadHints
      * the calling thread indicates to the runtime that it is busy-waiting. The runtime
      * may take action to improve the performance of invoking spin-wait loop constructions.
      */
-    public static void onSpinWait()
-    {
+    public static void onSpinWait() {
         // Call java.lang.Thread.onSpinWait() on Java SE versions that support it. Do nothing otherwise.
         // This should optimize away to either nothing or to an inlining of java.lang.Thread.onSpinWait()
-        if (null != ON_SPIN_WAIT_METHOD_HANDLE)
-        {
-            try
-            {
+        if (null != ON_SPIN_WAIT_METHOD_HANDLE) {
+            try {
                 ON_SPIN_WAIT_METHOD_HANDLE.invokeExact();
-            }
-            catch (final Throwable ignore)
-            {
+            } catch (final Throwable ignore) {
             }
         }
     }
