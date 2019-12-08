@@ -1,5 +1,6 @@
 package com.zxb.disruptor;
 
+import com.zxb.disruptor.server.NettyServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -15,5 +16,7 @@ public class NettyServerApplication {
     public static void main(String[] args) {
 
         SpringApplication.run(NettyServerApplication.class, args);
+
+        new NettyServer();
     }
 }
