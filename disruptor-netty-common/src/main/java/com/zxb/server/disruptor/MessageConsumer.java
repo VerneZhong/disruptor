@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public abstract class MessageConsumer implements WorkHandler<TranslatorDataWrapper> {
 
-    private String consumerId;
+    protected String consumerId;
 
     public MessageConsumer(String consumerId) {
         this.consumerId = consumerId;

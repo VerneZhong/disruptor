@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 /**
- * class
+ * Disruptor 组件
  *
  * @author Mr.zxb
  * @date 2019-12-08 15:55
