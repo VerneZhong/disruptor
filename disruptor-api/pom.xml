@@ -35,5 +35,12 @@
             <artifactId>zookeeper</artifactId>
             <version>3.5.6</version>
         </dependency>
+
+<!--        顺序UUID生成 -->
+        <dependency>
+            <groupId>com.fasterxml.uuid</groupId>
+            <artifactId>java-uuid-generator</artifactId>
+            <version>3.2.0</version>
+        </dependency>
     </dependencies>
 </project>
